@@ -1,0 +1,62 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<link href="~/Content/datatables/css/dataTables.bootstrap.min.css" rel="stylesheet" />
+<table id="datatable" class="table table-condensed table-striped" data-url="@Url.Content("~/Student/Index")">
+    <thead>
+        <tr>
+            <th>studentid</th>
+            <th>shortname</th>
+            <th>classname</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+</table>
+
+@section scripts {
+
+    <script src="~/Content/datatables/js/jquery.dataTables.min.js"></script>
+    <script src="~/Content/datatables/js/dataTables.bootstrap.min.js"></script>
+
+    <script>
+        var dataTable = {
+            table: null,
+            initializeDataTable: function () {
+                dataTable.table = $('#datatable').dataTable
+                ({
+                    "language": { "processing": "<div class='overlay'><font color='#007bff'><i class='fa fa-cog fa-spin fa-3x fa-fw'></i></font></div>" },
+                    "stateSave": true,
+                    "processing": true,
+                    "serverSide": true,
+                    "cache": true,
+                    "ajax": { "url": "@Url.Action("JQueryDataTable", "Student")", "type": "POST", "dataType": "JSON" },
+                    "columns": [
+                        {
+                            data: 'studentid', name: 'studentid', render: function (data, type, row) { return '<small><b>' + data + '</b></small>'; }
+                        },
+                        {
+                            data: 'shortname', name: 'shortname', render: function (data, type, row) { return '<small><b>' + data + '</b></small>'; }
+                        },
+                        {
+                            data: 'classname', name: 'classname', render: function (data, type, row) { return '<small><b>' + data + '</b></small>'; }
+                        }
+                    ]
+                });
+            },
+            getData: function () {
+                if (dataTable.table == null) {
+                    dataTable.initializeDataTable();
+                }
+                else {
+                    dataTable.table.ajax.reload();
+                }
+            }
+        };
+
+        $(document).ready(function () {
+            dataTable.getData();
+        });
+    </script>
+}
